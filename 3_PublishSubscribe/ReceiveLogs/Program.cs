@@ -2,13 +2,15 @@
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
+// Create connection to the server
 var factory = new ConnectionFactory { HostName = "localhost" };
 using var connection = factory.CreateConnection();
 using var channel = connection.CreateModel();
 
+// Declare fanout exchange
 channel.ExchangeDeclare(exchange: "logs", type: ExchangeType.Fanout);
 
-// declare a server-named queue
+// Declare a server-named queue
 var queueName = channel.QueueDeclare().QueueName;
 channel.QueueBind(queue: queueName,
                   exchange: "logs",
@@ -16,6 +18,7 @@ channel.QueueBind(queue: queueName,
 
 Console.WriteLine(" [*] Waiting for logs.");
 
+// Declare callback to handle incoming messages
 var consumer = new EventingBasicConsumer(channel);
 consumer.Received += (model, ea) =>
 {
@@ -23,6 +26,7 @@ consumer.Received += (model, ea) =>
     var message = Encoding.UTF8.GetString(body);
     Console.WriteLine($" [x] {message}");
 };
+// Start a basic content-class consumer
 channel.BasicConsume(queue: queueName,
                      autoAck: true,
                      consumer: consumer);

@@ -1,10 +1,12 @@
 ﻿using System.Text;
 using RabbitMQ.Client;
 
+// Create connection to the server
 var factory = new ConnectionFactory { HostName = "localhost" };
 using var connection = factory.CreateConnection();
 using var channel = connection.CreateModel();
 
+// Declare queue to publish to
 channel.QueueDeclare(queue: "hello",
                      durable: false,
                      exclusive: false,
@@ -14,6 +16,7 @@ channel.QueueDeclare(queue: "hello",
 const string message = "Hello World!";
 var body = Encoding.UTF8.GetBytes(message);
 
+// Publish message to queue
 channel.BasicPublish(exchange: string.Empty,
                      routingKey: "hello",
                      basicProperties: null,
