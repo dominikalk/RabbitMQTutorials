@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿// https://www.rabbitmq.com/tutorials/tutorial-one-dotnet
+
+using System.Text;
 using RabbitMQ.Client;
 
 // Create connection to the server

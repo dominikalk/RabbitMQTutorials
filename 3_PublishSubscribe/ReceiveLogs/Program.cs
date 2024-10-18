@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿// https://www.rabbitmq.com/tutorials/tutorial-three-dotnet
+
+using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 

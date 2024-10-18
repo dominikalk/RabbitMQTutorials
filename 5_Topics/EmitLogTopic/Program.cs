@@ -1,4 +1,4 @@
-﻿// https://www.rabbitmq.com/tutorials/tutorial-four-dotnet
+﻿// https://www.rabbitmq.com/tutorials/tutorial-five-dotnet
 
 using System.Text;
 using RabbitMQ.Client;
@@ -8,19 +8,19 @@ var factory = new ConnectionFactory { HostName = "localhost" };
 using var connection = factory.CreateConnection();
 using var channel = connection.CreateModel();
 
-// Declare direct exchange
-channel.ExchangeDeclare(exchange: "direct_logs", type: ExchangeType.Direct);
+// Declare topic exchange
+channel.ExchangeDeclare(exchange: "topic_logs", type: ExchangeType.Topic);
 
-var severity = (args.Length > 0) ? args[0] : "info";
+var routingKey = (args.Length > 0) ? args[0] : "anonymous.info";
 var message = (args.Length > 1)
               ? string.Join(" ", args.Skip(1).ToArray())
               : "Hello World!";
 var body = Encoding.UTF8.GetBytes(message);
 
-// Publish message to named exchange instead of default exchange 
-channel.BasicPublish(exchange: "direct_logs",
+// Publish message to named exchange instead of default exchange
+channel.BasicPublish(exchange: "topic_logs",
                      // Define routing key for exchange to utilise
-                     routingKey: severity,
+                     routingKey: routingKey,
                      basicProperties: null,
                      body: body);
-Console.WriteLine($" [x] Sent '{severity}':'{message}'");
+Console.WriteLine($" [x] Sent '{routingKey}':'{message}'");
